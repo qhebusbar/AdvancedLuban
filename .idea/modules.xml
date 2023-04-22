@@ -2,9 +2,15 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AdvancedLuban.iml" filepath="$PROJECT_DIR$/AdvancedLuban.iml" />
-      <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AdvancedLuban.iml" filepath="$PROJECT_DIR$/.idea/AdvancedLuban.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/example/AdvancedLuban.example.iml" filepath="$PROJECT_DIR$/.idea/modules/example/AdvancedLuban.example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/example/AdvancedLuban.example.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/example/AdvancedLuban.example.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/example/AdvancedLuban.example.main.iml" filepath="$PROJECT_DIR$/.idea/modules/example/AdvancedLuban.example.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/example/AdvancedLuban.example.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/example/AdvancedLuban.example.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/AdvancedLuban.library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/AdvancedLuban.library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/AdvancedLuban.library.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library/AdvancedLuban.library.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/AdvancedLuban.library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/library/AdvancedLuban.library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/AdvancedLuban.library.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library/AdvancedLuban.library.unitTest.iml" />
     </modules>
   </component>
 </project>

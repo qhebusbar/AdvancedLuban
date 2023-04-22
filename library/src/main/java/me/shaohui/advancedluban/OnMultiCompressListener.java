@@ -7,7 +7,7 @@ import java.util.List;
  * Created by shaohui on 16/10/12.
  */
 
-public interface OnMultiCompressListener {
+public interface OnMultiCompressListener<T> {
 
     /**
      * Fired when the compression is started, override to handle in your own code
@@ -17,7 +17,7 @@ public interface OnMultiCompressListener {
     /**
      * Fired when a compression returns successfully, override to handle in your own code
      */
-    void onSuccess(List<File> fileList);
+    void onSuccess(List<T> result);
 
     /**
      * Fired when a compression fails to complete, override to handle in your own code

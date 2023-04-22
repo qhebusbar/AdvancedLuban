@@ -1,8 +1,12 @@
 package me.shaohui.advancedlubanexample;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private List<File> mFileList;
 
+    private List<Uri> uris;
+
     private List<ImageView> mImageViews;
 
     private RadioGroup mMethodGroup;
@@ -40,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mFileList = new ArrayList<>();
+        uris = new ArrayList<>();
 
         mImageViews = new ArrayList<>();
         mImageViews.add((ImageView) findViewById(R.id.image_1));
@@ -58,7 +65,20 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.select_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MultiImageSelector.create().start(MainActivity.this, REQUEST_CODE);
+//                MultiImageSelector.create().start(MainActivity.this, REQUEST_CODE);
+                String[] projection = {MediaStore.Images.Media._ID};
+                Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection, null, null, null);
+                uris.clear();
+                while (cursor != null && cursor.moveToNext()) {
+                    long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
+                    Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                    Log.i("TAG", "uri: " + uri);
+                    uris.add(uri);
+                }
+                if (cursor!=null) {
+                    cursor.close();
+                }
             }
         });
         findViewById(R.id.compress_image).setOnClickListener(new View.OnClickListener() {
@@ -86,18 +106,18 @@ public class MainActivity extends AppCompatActivity {
         }
         switch (mMethodGroup.getCheckedRadioButtonId()) {
             case R.id.method_listener:
-                if (mFileList.size() == 1) {
+                if (uris.size() == 1) {
                     compressSingleListener(gear);
                 } else {
                     compressMultiListener(gear);
                 }
                 break;
             case R.id.method_rxjava:
-                if (mFileList.size() == 1) {
+//                if (uris.size() == 1) {
                     compressSingleRxJava(gear);
-                } else {
-                    compressMultiRxJava(gear);
-                }
+//                } else {
+//                    compressMultiRxJava(gear);
+//                }
                 break;
             default:
         }
@@ -105,18 +125,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void compressSingleRxJava(int gear) {
-        if (mFileList.isEmpty()) {
+        if (uris.isEmpty()) {
             return;
         }
 
-        Luban.compress(mFileList.get(0), getFilesDir())
+        Luban.compressUri(this, uris.get(0))
+                .setCacheDir(getCacheDir())
                 .putGear(gear)
                 .asObservable()
-                .subscribe(new Consumer<File>() {
+                .subscribe(new Consumer<Uri>() {
                     @Override
-                    public void accept(File file) throws Exception {
-                        Log.i("TAG", file.getAbsolutePath());
-                        mImageViews.get(0).setImageURI(Uri.fromFile(file));
+                    public void accept(Uri file) throws Exception {
+                        Log.i("TAG", file.getPath());
+                        mImageViews.get(0).setImageURI(file);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -130,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         if (mFileList.isEmpty()) {
             return;
         }
-        Luban.compress(this, mFileList)
+        Luban.compressFiles(this, mFileList)
                 .putGear(gear)
                 .asListObservable()
                 .subscribe(new Consumer<List<File>>() {
@@ -153,9 +174,10 @@ public class MainActivity extends AppCompatActivity {
         if (mFileList.isEmpty()) {
             return;
         }
-        Luban.compress(mFileList.get(0), getFilesDir())
+        Luban.compressFile(this, mFileList.get(0))
+                .setCacheDir(getFilesDir())
                 .putGear(gear)
-                .launch(new OnCompressListener() {
+                .launch(new OnCompressListener<File>() {
                     @Override
                     public void onStart() {
                         Log.i(TAG, "start");
@@ -175,22 +197,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void compressMultiListener(int gear) {
-        if (mFileList.isEmpty()) {
+        if (uris.isEmpty()) {
             return;
         }
-        Luban.compress(this, mFileList)
+        Luban.compressUris(this, uris)
                 .putGear(gear)
-                .launch(new OnMultiCompressListener() {
+                .launch(new OnMultiCompressListener<Uri>() {
                     @Override
                     public void onStart() {
                         Log.i(TAG, "start");
                     }
 
                     @Override
-                    public void onSuccess(List<File> fileList) {
+                    public void onSuccess(List<Uri> fileList) {
                         int size = fileList.size();
                         while (size-- > 0) {
-                            mImageViews.get(size).setImageURI(Uri.fromFile(fileList.get(size)));
+                            Log.i("TAG","compress uri: "+ fileList.get(size));
+                            mImageViews.get(size).setImageURI(fileList.get(size));
                         }
                     }
 

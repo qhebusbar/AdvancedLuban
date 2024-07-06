@@ -1,28 +1,33 @@
 package me.shaohui.advancedlubanexample;
 
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
-import android.content.ContentValues;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import io.reactivex.functions.Consumer;
-import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import me.shaohui.advancedluban.Luban;
 import me.shaohui.advancedluban.OnCompressListener;
 import me.shaohui.advancedluban.OnMultiCompressListener;
+import io.reactivex.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                         projection, null, null, null);
                 uris.clear();
                 while (cursor != null && cursor.moveToNext()) {
-                    long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
+                    @SuppressLint("Range") long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
                     Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
                     Log.i("TAG", "uri: " + uri);
                     uris.add(uri);
@@ -124,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("CheckResult")
     private void compressSingleRxJava(int gear) {
         if (uris.isEmpty()) {
             return;
